@@ -34,6 +34,25 @@ export const todayAppointments: Appointment[] = [
   { id: "4", patientName: "Mariana Costa", time: "14:00", status: "pending", date: format(today, "dd/MM/yyyy") },
 ];
 
+export interface Patient {
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  lastAppointment: string;
+  totalSessions: number;
+  status: "active" | "inactive";
+}
+
+export const mockPatients: Patient[] = [
+  { id: "p1", name: "João Pedro Almeida", email: "joao@email.com", phone: "(11) 99999-0001", lastAppointment: format(today, "dd/MM/yyyy"), totalSessions: 12, status: "active" },
+  { id: "p2", name: "Ana Carolina Souza", email: "ana@email.com", phone: "(11) 99999-0002", lastAppointment: format(today, "dd/MM/yyyy"), totalSessions: 8, status: "active" },
+  { id: "p3", name: "Lucas Ferreira", email: "lucas@email.com", phone: "(11) 99999-0003", lastAppointment: format(today, "dd/MM/yyyy"), totalSessions: 3, status: "active" },
+  { id: "p4", name: "Mariana Costa", email: "mariana@email.com", phone: "(11) 99999-0004", lastAppointment: format(today, "dd/MM/yyyy"), totalSessions: 5, status: "active" },
+  { id: "p5", name: "Roberto Santos", email: "roberto@email.com", phone: "(11) 99999-0005", lastAppointment: "15/03/2026", totalSessions: 20, status: "inactive" },
+  { id: "p6", name: "Camila Oliveira", email: "camila@email.com", phone: "(11) 99999-0006", lastAppointment: "28/03/2026", totalSessions: 6, status: "active" },
+];
+
 export const mockAiSummary = {
   queixaPrincipal: "Paciente relata aumento significativo de ansiedade nas últimas duas semanas, especialmente em situações sociais no ambiente de trabalho. Dificuldade para dormir e sensação constante de preocupação.",
   observacoes: "Paciente apresenta-se colaborativo, com discurso coerente. Nota-se tensão muscular e inquietação motora. Relata uso de técnicas de respiração aprendidas na sessão anterior com resultados parciais. Vínculo terapêutico bem estabelecido.",
