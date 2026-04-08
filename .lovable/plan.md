@@ -1,39 +1,50 @@
 
 
-## Hub de Integração e Faturamento para Profissionais de Saúde — MVP UI
+## Adicionar Páginas de Pacientes e Configurações
 
-### Design System
-- Paleta: azul claro (#0EA5E9), verde água (#14B8A6), branco, cinza claro
-- Mobile-first, minimalista, shadcn/ui + Tailwind
-- Fontes clean, espaçamento generoso, foco na ação principal
+### Resumo
+Criar duas novas páginas dentro do dashboard — **Pacientes** e **Configurações** — reutilizando o layout existente (sidebar + header) e dados mockados.
 
-### Páginas
+### Arquitetura
 
-**1. Landing Page Pública (`/`)**
-- Header com foto, nome ("Dra. Maria Silva"), especialidade e bio curta
-- Calendário interativo com horários disponíveis mockados
-- Formulário pós-seleção: Nome, E-mail, Telefone
-- Botão "Agende sua experiência" → toast de sucesso
-- Design acolhedor, responsivo
+A abordagem atual tem o layout do dashboard (SidebarProvider, AppSidebar, header) duplicado dentro de `Dashboard.tsx`. Para evitar repetir esse layout em 3 páginas, vou criar um **DashboardLayout** compartilhado e usar rotas aninhadas.
 
-**2. Dashboard do Profissional (`/dashboard`)**
-- Sidebar com navegação: Minha Agenda, Pacientes, Configurações (colapsável em mobile)
-- Home: resumo das consultas do dia em cards (horário, paciente, status Pago/Pendente com badges)
-- Botão "Abrir Prontuário" em cada card → abre modal
-- Link temporário na landing para acessar o dashboard (simulando login)
+```text
+/dashboard          → DashboardLayout > Agenda (conteúdo atual)
+/dashboard/patients → DashboardLayout > Patients
+/dashboard/settings → DashboardLayout > Settings
+```
 
-**3. Modal de Prontuário Clínico**
-- Cabeçalho: nome do paciente + data
-- Textarea grande para anotações livres
-- Botão "Gerar Resumo com IA" com ícone sparkles → preenche resultado mockado após loading simulado
-- Área estruturada read-only: Queixa Principal, Observações, Plano de Ação
+### Arquivos
 
-### Dados Mockados
-- 5 horários disponíveis no calendário para os próximos dias
-- 4 consultas do dia no dashboard com status variados
-- Resultado de IA pré-definido para demonstração
+**1. `src/components/DashboardLayout.tsx`** (novo)
+- Extrai o shell do Dashboard atual: SidebarProvider, AppSidebar, header com trigger e botão Sair
+- Renderiza `<Outlet />` no main
 
-### Navegação
-- Landing page com link "Área do Profissional" no canto superior
-- Estado local para simular autenticação (sem Supabase)
+**2. `src/pages/Dashboard.tsx`** (refatorar)
+- Manter apenas o conteúdo da agenda (chips + lista de cards + modal)
+- Remover o layout wrapper
+
+**3. `src/pages/Patients.tsx`** (novo)
+- Título "Pacientes" + subtítulo
+- Tabela com dados mockados: Nome, E-mail, Telefone, Última Consulta, Total de Sessões
+- 6 pacientes mockados (incluindo os 4 já existentes nos appointments)
+- Campo de busca simples (filtro local por nome)
+- Badge de status (Ativo/Inativo)
+
+**4. `src/pages/Settings.tsx`** (novo)
+- Título "Configurações" + subtítulo
+- Card "Perfil Profissional": campos Nome, Especialidade, Bio (preenchidos com dados do mock), botão Salvar → toast
+- Card "Horários de Atendimento": checkboxes dos dias da semana + horário início/fim, botão Salvar → toast
+- Card "Valores": campo Valor da Consulta (R$), botão Salvar → toast
+
+**5. `src/lib/mock-data.ts`** (atualizar)
+- Adicionar array `mockPatients` com 6 pacientes
+
+**6. `src/App.tsx`** (atualizar rotas)
+- `/dashboard` como rota pai com DashboardLayout
+- Rotas filhas: index (agenda), `patients`, `settings`
+
+### Componentes UI utilizados
+- Table, Input, Label, Card, Button, Badge, Switch/Checkbox — todos já disponíveis no projeto
 
